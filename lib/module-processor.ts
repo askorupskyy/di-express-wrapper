@@ -1,4 +1,5 @@
-import { Registry } from './Registry';
+import { Registry } from './registry/Registry';
+import { EndpointRegistry } from './registry/EndpointRegistry';
 import { Application } from 'express';
 
 class Module<T> {
@@ -19,12 +20,14 @@ class Module<T> {
       }
     })
 
-    const injected = this.injected.map(i => Registry.getInstance().get(i.name))
-    const serviceInstance = new service(...injected);
+    const serviceInstance = new service(...this.injected);
 
     const serviceName = Object.getPrototypeOf(serviceInstance.constructor).name
 
-    new Registry().getServiceEndpoints(serviceName).forEach(endpoint => {
+    new EndpointRegistry().getEndpoints(serviceName).forEach(endpoint => {
+      for (const handler of endpoint.middlewareHandlers) {
+        this.app.use(`${this.route_prefix}${endpoint.path}`, handler);
+      }
       this.app[endpoint.method](`${this.route_prefix}${endpoint.path}`, endpoint.handler.bind(serviceInstance))
     })
   }

@@ -5,4 +5,5 @@ export type Endpoint = {
   path: string;
   method: HTTPMethod;
   handler: Handler;
+  middlewareHandlers: Handler[];
 }
