@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "noImplicitUseStrict": true
+  }
+}
